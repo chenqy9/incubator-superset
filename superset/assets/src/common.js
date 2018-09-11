@@ -1,5 +1,6 @@
-/* eslint-disable global-require */
+/* eslint global-require: 0, no-console: 0 */
 import $ from 'jquery';
+import { SupersetClient } from '@superset-ui/core';
 import { t } from './locales';
 
 const utils = require('./modules/utils');
@@ -17,10 +18,9 @@ $(document).ready(function () {
     ev.preventDefault();
 
     const targetUrl = ev.currentTarget.href;
-    $.ajax(targetUrl)
-      .then(() => {
-        location.reload();
-      });
+    $.ajax(targetUrl).then(() => {
+      location.reload();
+    });
   });
 });
 
@@ -30,6 +30,12 @@ export function appSetup() {
   window.$ = $;
   window.jQuery = $;
   require('bootstrap');
+
+  SupersetClient.configure({ host: (window.location && window.location.host) || '' })
+    .init()
+    .catch((error) => {
+      console.warn(error);
+    });
 }
 
 // Error messages used in many places across applications
